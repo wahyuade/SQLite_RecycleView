@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import recycleview.sqlite.wahyuadesasongko.sqlite_with_recycleview.Database.DatabaseHandler;
 import recycleview.sqlite.wahyuadesasongko.sqlite_with_recycleview.Database.News;
@@ -139,6 +140,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsList>{
         data_news.add(data_insert);
     }
 
+    public void replaceDataNews(ArrayList<News> data){
+        data_news = data;
+        activity.list_news_adapter.notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
         return data_news.toArray().length;

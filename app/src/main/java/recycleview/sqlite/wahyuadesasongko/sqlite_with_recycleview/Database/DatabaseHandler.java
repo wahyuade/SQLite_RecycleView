@@ -140,4 +140,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
         return true;
     }
+
+    public News[] setSomeString(String set, String val){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NEWS, new String[]{KEY_ID,KEY_TITLE,KEY_BODY,KEY_DATE,KEY_LIKES,KEY_DISLIKES},KEY_TITLE+" LIKE '%"+set+"%'",null,null,null,null);
+
+        News data[] = new News[cursor.getCount()];
+        for (int cc=0; cc<cursor.getCount();cc++){
+            cursor.moveToPosition(cc);
+            ContentValues editTitle = new ContentValues();
+            String change = cursor.getString(1).replace(set,val);
+            editTitle.put(KEY_TITLE, change);
+            db.update(TABLE_NEWS, editTitle, KEY_ID+"="+cursor.getString(0),null);
+            data[cc] = new News(Integer.parseInt(cursor.getString(0)),change, cursor.getString(2), Long.parseLong(cursor.getString(3)), Integer.parseInt(cursor.getString(4)),Integer.parseInt(cursor.getString(5)));
+        }
+        return readAllNews();
+    }
 }

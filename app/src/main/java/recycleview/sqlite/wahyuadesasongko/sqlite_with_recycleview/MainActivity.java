@@ -25,7 +25,7 @@ import recycleview.sqlite.wahyuadesasongko.sqlite_with_recycleview.Database.Data
 import recycleview.sqlite.wahyuadesasongko.sqlite_with_recycleview.Database.News;
 
 public class MainActivity extends Activity {
-    FloatingActionButton add_news;
+    FloatingActionButton add_news, change;
     RecyclerView news_list;
     NewsAdapter list_news_adapter;
     @Override
@@ -46,6 +46,8 @@ public class MainActivity extends Activity {
         news_list.setAdapter(list_news_adapter);
 
         add_news = (FloatingActionButton)findViewById(R.id.add_news);
+        change = (FloatingActionButton)findViewById(R.id.change);
+
         add_news.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +84,41 @@ public class MainActivity extends Activity {
                     @Override
                     public void onClick(View v) {
                         add.dismiss();
+                    }
+                });
+            }
+        });
+
+        change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog change = new Dialog(MainActivity.this);
+                change.setContentView(R.layout.change_data);
+                change.setTitle("Change data");
+                change.show();
+
+                final EditText set = (EditText)change.findViewById(R.id.set);
+                final EditText val = (EditText)change.findViewById(R.id.val);
+                Button change_button = (Button)change.findViewById(R.id.change_button);
+                Button cancel_button = (Button)change.findViewById(R.id.cancel_button);
+
+                change_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(!set.getText().toString().isEmpty() && !val.getText().toString().isEmpty()){
+                            DatabaseHandler db = new DatabaseHandler(MainActivity.this);
+                            list_news_adapter.replaceDataNews(new ArrayList<News>(Arrays.asList(db.setSomeString(set.getText().toString(), val.getText().toString()))));
+                            db.close();
+                            Toast.makeText(MainActivity.this, "Data successfull changed !", Toast.LENGTH_SHORT).show();
+                            change.dismiss();
+                        }
+                    }
+                });
+
+                cancel_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        change.dismiss();
                     }
                 });
             }
